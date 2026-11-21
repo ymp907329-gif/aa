@@ -1,0 +1,48 @@
+data:
+  root: "./data/MSRS"
+  train_split: "train"
+  val_split: null
+  test_split: "test"
+  exclude_test_overlap: true
+  split_seed: 42
+  val_ratio: 0.1
+  size: 256
+  batch_size: 2
+  num_workers: 0
+model:
+  base_ch: 64
+  in_ch: 1
+  use_aid: true
+  use_dfd: true
+  use_skip: true
+  use_source_reconstruction: true
+  use_adaptive_compensation: true
+  compensation: {hidden_channels: 16, beta_max: 1.0, output_scale: 1.3, noise_kernel: 5}
+  aid: {max_steps: 4, min_steps: 2, residual_tol: 0.05, consistency_tol: 0.5, diffusion_step: 0.12, kappa: 0.25, region_adaptive: true, stop_kernel: 5}
+  dfd: {wavelet: "haar", max_offset: 2.0}
+train:
+  epochs: 35
+  lr: 2.0e-5
+  weight_decay: 1.0e-4
+  save_dir: "./checkpoints/research/haar_adaptive_compensation_main_seed44"
+  log_dir: "./logs/research/haar_adaptive_compensation_main_seed44"
+  save_freq: 5
+  log_freq: 20
+  patience: 10
+  selection_metric: "sf_qabf"
+  sf_qabf_reference: {sf: 17.5325, qabf: 0.5980}
+  seed: 44
+  init_from: "./checkpoints/research/haar_source_reconstruction_seed44/best.pth"
+  init_strict: false
+loss:
+  intensity_mode: "max"
+  lambda_pixel: 1.0
+  lambda_gradient: 2.0
+  lambda_ssim: 2.0
+  lambda_freqcl: 0.01
+  lambda_offset: 0.01
+  lambda_source_reconstruction: 0.5
+  gradient_mode: "vector"
+  lambda_orientation: 0.2
+  temperature: 0.2
+  wavelet_levels: 2

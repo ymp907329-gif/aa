@@ -1,0 +1,52 @@
+data:
+  root: "./data/MSRS"
+  train_split: "train"
+  val_split: null
+  test_split: "test"
+  exclude_test_overlap: true
+  split_seed: 42
+  val_ratio: 0.1
+  size: 256
+  batch_size: 2
+  num_workers: 0
+
+model:
+  base_ch: 64
+  in_ch: 1
+  use_aid: false
+  use_dfd: true
+  use_skip: true
+  aid:
+    max_steps: 4
+    min_steps: 2
+    residual_tol: 0.05
+    consistency_tol: 0.5
+    diffusion_step: 0.12
+    kappa: 0.25
+    region_adaptive: true
+    stop_kernel: 5
+  dfd:
+    wavelet: "haar"
+    max_offset: 2.0
+
+train:
+  epochs: 60
+  lr: 1.0e-4
+  weight_decay: 1.0e-4
+  save_dir: "./checkpoints/research/haar_no_aid"
+  log_dir: "./logs/research/haar_no_aid"
+  save_freq: 10
+  log_freq: 20
+  patience: 12
+  selection_metric: "ssim"
+  seed: 42
+
+loss:
+  intensity_mode: "max"
+  lambda_pixel: 1.0
+  lambda_gradient: 2.0
+  lambda_ssim: 2.0
+  lambda_freqcl: 0.01
+  lambda_offset: 0.01
+  temperature: 0.2
+  wavelet_levels: 2

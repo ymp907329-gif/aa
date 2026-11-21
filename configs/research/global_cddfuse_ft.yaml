@@ -1,0 +1,69 @@
+data:
+  root: "./data/MSRS"
+  train_split: "train"
+  val_split: null
+  test_split: "test"
+  exclude_test_overlap: true
+  split_seed: 42
+  val_ratio: 0.1
+  size: 256
+  batch_size: 2
+  num_workers: 0
+  augmentation:
+    photometric: true
+    probability: 0.5
+    brightness: 0.04
+    contrast: 0.1
+    gamma: 0.1
+
+model:
+  base_ch: 64
+  in_ch: 1
+  use_aid: true
+  use_dfd: true
+  use_skip: true
+  use_global: true
+  global_pool: 8
+  global_heads: 4
+  aid:
+    max_steps: 4
+    min_steps: 2
+    residual_tol: 0.05
+    consistency_tol: 0.5
+    diffusion_step: 0.12
+    kappa: 0.25
+    region_adaptive: true
+    stop_kernel: 5
+  dfd:
+    wavelet: "lifting"
+    max_offset: 2.0
+
+train:
+  init_from: "./checkpoints/ablation/region_lifting_miqabf/best.pth"
+  init_strict: false
+  teacher_type: "cddfuse"
+  distill_from: "./external/MMIF-CDDFuse/models/CDDFuse_IVF.pth"
+  lambda_distill: 0.5
+  epochs: 3
+  lr: 1.0e-5
+  weight_decay: 1.0e-4
+  save_dir: "./checkpoints/research/global_cddfuse_ft"
+  log_dir: "./logs/research/global_cddfuse_ft"
+  save_freq: 1
+  log_freq: 20
+  patience: 3
+  selection_metric: "mi_qabf"
+  mi_qabf_reference:
+    mi: 3.5390430389085417
+    qabf: 0.6112484826646687
+  seed: 42
+
+loss:
+  intensity_mode: "max"
+  lambda_pixel: 1.0
+  lambda_gradient: 2.0
+  lambda_ssim: 2.0
+  lambda_freqcl: 0.01
+  lambda_offset: 0.01
+  temperature: 0.2
+  wavelet_levels: 2

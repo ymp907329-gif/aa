@@ -1,0 +1,59 @@
+data:
+  root: "./data/MSRS"
+  train_split: "train"
+  val_split: null
+  test_split: "test"
+  exclude_test_overlap: true
+  split_seed: 42
+  val_ratio: 0.1
+  size: 256
+  batch_size: 2
+  num_workers: 0
+  augmentation:
+    photometric: true
+    probability: 0.5
+    brightness: 0.04
+    contrast: 0.1
+    gamma: 0.1
+model:
+  base_ch: 64
+  in_ch: 1
+  use_aid: true
+  use_dfd: true
+  use_skip: true
+  use_global: true
+  global_pool: 8
+  global_heads: 4
+  use_source_reconstruction: true
+  use_adaptive_compensation: false
+  aid: {max_steps: 4, min_steps: 2, residual_tol: 0.05, consistency_tol: 0.5, diffusion_step: 0.12, kappa: 0.25, region_adaptive: true, stop_kernel: 5}
+  dfd: {wavelet: "lifting", max_offset: 2.0}
+train:
+  init_from: "./checkpoints/research/global_reliability_directional_edge/best.pth"
+  init_strict: false
+  distill_from: null
+  epochs: 15
+  lr: 5.0e-6
+  weight_decay: 1.0e-4
+  save_dir: "./checkpoints/research/global_edge_no_teacher"
+  log_dir: "./logs/research/global_edge_no_teacher"
+  save_freq: 5
+  log_freq: 20
+  patience: 6
+  selection_metric: "sf_qabf"
+  sf_qabf_reference: {sf: 17.5325, qabf: 0.5980}
+  seed: 42
+loss:
+  intensity_mode: "max"
+  lambda_pixel: 1.0
+  lambda_gradient: 3.0
+  lambda_ssim: 1.5
+  lambda_freqcl: 0.01
+  lambda_offset: 0.01
+  lambda_source_reconstruction: 0.5
+  gradient_mode: "vector"
+  lambda_orientation: 0.1
+  lambda_edge_preservation: 0.3
+  edge_overshoot_penalty: 1.0
+  temperature: 0.2
+  wavelet_levels: 2
