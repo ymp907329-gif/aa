@@ -1,6 +1,6 @@
 # IVF-DecompFuse
 
-按开题报告实现的红外—可见光图像融合框架：双流 Inception 编码器为 Baseline，依次接入 AID（自适应迭代分解）、DFD（可变形对齐与频域解耦）和 FreqCL（频带对比学习）。
+红外—可见光图像融合框架：双流 Inception 编码器为 Baseline，依次接入 AID（自适应迭代分解）、DFD（可变形对齐与频域解耦）和 FreqCL（频带对比学习）。
 
 ## 数据目录
 
